@@ -2,8 +2,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-def getPage(url):
-    session = requests.Session()
+def getPage(session, url):
     headers = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5)'
             'AppleWebKit 537.36 (KHTML, like Gecko) Chrome',
             'Accept':'text/html,application/xhtml+xml,application/xml;'

@@ -2,9 +2,15 @@ import scrapingFunction as sf
 import time
 import csv
 import pandas as pd
+import pickle
+import requests
 
 # input the person page url
 url_person = 'https://movie.douban.com/people/1402913'
+cookiesDict = pickle.load(open("cookies.pkl", "rb"))
+s = requests.Session()
+for cookie in cookiesDict:
+    s.cookies.set(cookie['name'], cookie['value'])
 
 # select the first page of 看过的电影
 movieCollection = {} # the collected movie set
@@ -14,7 +20,7 @@ nextPage = True
 # run the scraper while the nextpage tag exists in webpage
 pageNum = 0
 while nextPage != False:
-    moviePage = sf.getPage(urlCollect)
+    moviePage = sf.getPage(s, urlCollect)
     movieCollection = sf.getMovie(moviePage, movieCollection)
     nextPage = sf.checkNextPage(moviePage)
     if nextPage != False:
@@ -43,7 +49,7 @@ for i in range(len(dfMovie['name'])):
     item = {} # collect one movie once in this dictionary
     item['name'] = dfMovie.iloc[i, 0]
     item['url'] = dfMovie.iloc[i, 1]
-    page = sf.getPage(item['url'])
+    page = sf.getPage(s, item['url'])
     if page.title.contents[0] == '页面不存在': # the page has been 404
         item['type'] = 404
         itemNum += 1
