@@ -56,15 +56,22 @@ for i in range(len(dfMovie['name'])):
         print(f'No.{itemNum} --- {dfMovie.iloc[i, 0]} has been 404')
     else:
         item['date'] = sf.getDate(page)[0]
-        item['rate'] = sf.getRating(page)[0]
         item['type'] = sf.getType(page)
         item['director'] = sf.getDirector(page)
         item['cast'] = sf.getCast(page)
         item['country'] = sf.getCountry(page)
         item['imdb'] = sf.getImdb(page)
-        item['collectDate'] = sf.getCollDate(page)
-        item['stars'] = sf.getStars(page)
-        item['rateText'] = sf.getRateText(page)
+        pubRating = sf.getRating(page)
+        if pubRating == None: # when the movie item has been limited, following 4 attributes should be None
+            item['rate'] = None
+            item['collectDate'] = None
+            item['stars'] = None
+            item['rateText'] = None
+        else:
+            item['rate'] = sf.getRating(page)[0]
+            item['collectDate'] = sf.getCollDate(page)
+            item['stars'] = sf.getStars(page)
+            item['rateText'] = sf.getRateText(page)
         movieInfo = movieInfo.append(item, ignore_index=True)
         time.sleep(6)
         itemNum += 1

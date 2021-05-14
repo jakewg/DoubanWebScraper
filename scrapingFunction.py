@@ -40,12 +40,11 @@ def getDate(page):
 
 def getRating(page):
 # get the movie rating
-    rating = page.find('strong', {'class':'ll rating_num'}).contents
-    if rating == []: # for movies without rating
-        rating = ['None']
-    else:
-        pass
-    return rating
+    try:
+        rating = page.find('strong', {'class':'ll rating_num'}).contents
+        return float(rating)
+    except AttributeError: # the movie may be limited
+        return None
 
 def getType(page):
 # get the movie type
