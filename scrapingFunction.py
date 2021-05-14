@@ -90,3 +90,19 @@ def getCountry(page):
 # get the producing country of the movie
     country = page.find('span', text = '制片国家/地区:').next_sibling
     return country
+
+def getCollDate(page):
+# get collection date <- cookies needed
+    collectDate = page.find('span', {'class': 'collection_date'}).text
+    return collectDate
+
+def getStars(page):
+# get stars number date <- cookies needed
+    rateStar = page.find('div', {'class': 'j a_stars'}).find('input', \
+        {'id':'n_rating'}).attrs['value']
+    return int(rateStar)
+
+def getRateText(page):
+# get rating content date <- cookies needed
+    text = page.find('div', {'class': 'j a_stars'}).find_all('span')[-2].text
+    return text.strip()

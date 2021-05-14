@@ -47,7 +47,7 @@ def drag_and_drop(browser, button, offset):
         ActionChains(browser).move_by_offset(x, 0).perform()
     ActionChains(browser).pause(0.5).release().perform()
 
-drag_and_drop(driver, button, 170)  # for this case, the distance could be 170, you may turn it
+drag_and_drop(driver, button, 170)  # for this case, the distance could be 170, or you may drag by hand
 
 # save the cookie for next using
 pickle.dump(driver.get_cookies(), open("cookies.pkl", "wb"))

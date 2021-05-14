@@ -33,7 +33,7 @@ while nextPage != False:
     time.sleep(6)
 
 # save the movie name and page url to csv
-with open('movieCollection.csv', 'w') as csv_file:  
+with open('data/movieCollection.csv', 'w') as csv_file:  
     writer = csv.writer(csv_file)
     writer.writerow(['name', 'url'])
     for key, value in movieCollection.items():
@@ -43,7 +43,7 @@ with open('movieCollection.csv', 'w') as csv_file:
 movieInfo = pd.DataFrame(columns=['name', 'url', 'date', 'rate', 'type',\
     'director', 'cast', 'country', 'imdb'])
 itemNum = 0
-dfMovie = pd.read_csv('movieCollection.csv')
+dfMovie = pd.read_csv('data/movieCollection.csv')
 # a loop to collect all relevant information of movies
 for i in range(len(dfMovie['name'])):
     item = {} # collect one movie once in this dictionary
@@ -62,9 +62,12 @@ for i in range(len(dfMovie['name'])):
         item['cast'] = sf.getCast(page)
         item['country'] = sf.getCountry(page)
         item['imdb'] = sf.getImdb(page)
+        item['collectDate'] = sf.getCollDate(page)
+        item['stars'] = sf.getStars(page)
+        item['rateText'] = sf.getRateText(page)
         movieInfo = movieInfo.append(item, ignore_index=True)
         time.sleep(6)
         itemNum += 1
         print(f'collected {itemNum} movies')
 # save the movie infomation
-movieInfo.to_csv('movieInfo.csv', index=False)
+movieInfo.to_csv('data/movieInfo.csv', index=False)
