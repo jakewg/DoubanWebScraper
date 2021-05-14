@@ -6,7 +6,8 @@ import pickle
 import requests
 
 # input the person page url
-url_person = 'https://movie.douban.com/people/1402913'
+uid = input('please input your user ID:')
+url_person = 'https://movie.douban.com/people/' + str(uid)
 cookiesDict = pickle.load(open("cookies.pkl", "rb"))
 s = requests.Session()
 for cookie in cookiesDict:
@@ -41,7 +42,7 @@ with open('data/movieCollection.csv', 'w') as csv_file:
 
 # set movies' variable and read all moviess url
 movieInfo = pd.DataFrame(columns=['name', 'url', 'date', 'rate', 'type',\
-    'director', 'cast', 'country', 'imdb'])
+    'director', 'cast', 'country', 'imdb', 'collectDate', 'stars', 'rateText'])
 itemNum = 0
 dfMovie = pd.read_csv('data/movieCollection.csv')
 # a loop to collect all relevant information of movies
@@ -68,12 +69,12 @@ for i in range(len(dfMovie['name'])):
             item['stars'] = None
             item['rateText'] = None
         else:
-            item['rate'] = sf.getRating(page)[0]
+            item['rate'] = sf.getRating(page)
             item['collectDate'] = sf.getCollDate(page)
             item['stars'] = sf.getStars(page)
             item['rateText'] = sf.getRateText(page)
         movieInfo = movieInfo.append(item, ignore_index=True)
-        time.sleep(6)
+        time.sleep(3)
         itemNum += 1
         print(f'collected {itemNum} movies')
 # save the movie infomation

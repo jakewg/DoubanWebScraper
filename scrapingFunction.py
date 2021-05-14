@@ -42,33 +42,42 @@ def getRating(page):
 # get the movie rating
     try:
         rating = page.find('strong', {'class':'ll rating_num'}).contents
-        return float(rating)
+        return float(rating[0])
     except AttributeError: # the movie may be limited
         return None
 
 def getType(page):
 # get the movie type
-    type = [] # could has different types
-    for i in page.find_all('span', {'property': 'v:genre'}): 
-        type.append(i.contents[0])
-    return type
+    try:
+        type = [] # could has different types
+        for i in page.find_all('span', {'property': 'v:genre'}): 
+            type.append(i.contents[0])
+        return type
+    except AttributeError:
+        return None
 
 def getDirector(page):
 # get the director of the movie
-    director = [] # could has different director
-    divInfo = page.find('div', {'id': 'info'})
-    spans = divInfo.find_all('span')[0].find_all('a') # the first span is for directors
-    for span in spans:
-        director.append(span.contents[0])
-    return director
+    try:
+        director = [] # could has different director
+        divInfo = page.find('div', {'id': 'info'})
+        spans = divInfo.find_all('span')[0].find_all('a') # the first span is for directors
+        for span in spans:
+            director.append(span.contents[0])
+        return director
+    except AttributeError:
+        return None
 
 def getCast(page):
 # get the cast of the movie
-    cast = [] # could has different director
-    spans = page.find('span', {'class':'actor'}).find_all('a') # the first span is for directors
-    for span in spans:
-        cast.append(span.contents[0])
-    return cast
+    try:
+        cast = [] # could has different director
+        spans = page.find('span', {'class':'actor'}).find_all('a') # the first span is for directors
+        for span in spans:
+            cast.append(span.contents[0])
+        return cast
+    except AttributeError:
+        return None
 
 def getImdb(page):
 # get the imdb url of the movie
@@ -87,8 +96,11 @@ def getImdb(page):
 
 def getCountry(page):
 # get the producing country of the movie
-    country = page.find('span', text = '制片国家/地区:').next_sibling
-    return country
+    try:
+        country = page.find('span', text = '制片国家/地区:').next_sibling
+        return country
+    except AttributeError:
+        return None
 
 def getCollDate(page):
 # get collection date <- cookies needed
