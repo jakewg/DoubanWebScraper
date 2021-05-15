@@ -81,18 +81,11 @@ def getCast(page):
 
 def getImdb(page):
 # get the imdb url of the movie
-    for i in page.find_all('a'): # find all url
-        try:
-            text = i['href'] 
-            url = re.search(r'.*imdb.com/title/.*', text) # find the url contain imdb
-            if url == None:
-                pass
-            else:
-                imdb = url.string
-                break
-        except KeyError:
-            imdb = 'None'
-    return imdb
+    try:
+        imdb = page.find('span', text = 'IMDb:').next_sibling
+        return imdb.replace(" ", "")
+    except AttributeError:
+        return None
 
 def getCountry(page):
 # get the producing country of the movie
