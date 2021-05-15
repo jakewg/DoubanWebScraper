@@ -1,8 +1,8 @@
 from datetime import datetime
-from typing import Text
 import pandas as pd
 import re
-df = pd.read_csv('movieInfo.csv')
+
+df = pd.read_csv('data/movieInfo.csv', na_values = ['None'])
 
 # the data cleaning process begin >>>
 # clean the type data
@@ -28,12 +28,15 @@ for i in range(len(df['director'])):
 # clean the cast data
 for i in range(len(df['cast'])):
     data = df.loc[i, 'cast']
-    pattern = re.compile(r"[\u4e00-\u9fa5]{1,}·*[\u4e00-\u9fa5]*") 
-    res = pattern.findall(data)
-    ls = []
-    for item in res:
-        ls.append(item)
-    df.loc[i, 'cast'] = str(ls).replace('[', '').replace(']', '').replace("'", "")
+    if str(data) == 'nan': # the cast could be 'nan'
+        pass
+    else:
+        pattern = re.compile(r"[\u4e00-\u9fa5]{1,}·*[\u4e00-\u9fa5]*")
+        res = pattern.findall(data)
+        ls = []
+        for item in res:
+            ls.append(item)
+        df.loc[i, 'cast'] = str(ls).replace('[', '').replace(']', '').replace("'", "")
 
 # clean the date data
 for i in range(len(df['date'])):
@@ -49,9 +52,11 @@ for i in range(len(df['date'])):
 # clean the movie name and only contain chinese name
 for i in range(len(df['name'])):
     data = df.loc[i, 'name']
-    pattern = re.compile(r"^[\u4e00-\u9fa5 0-9·]{1,}") 
+    pattern = re.compile(r"[a-z｜A-Z｜\u4e00-\u9fa5| |0-9|·：]{1,}/|[\u4e00-\u9fa5]{1,}") 
     res = pattern.findall(data)
-    df.loc[i, 'name'] = str(res).replace('[', '').replace(']', '').replace("'", "")
+    CNname = str(res).replace('[', '').replace(']', '').replace("'", "")
+    df.loc[i, 'FORname'] = data.replace(CNname, "").replace("/", "").replace(" ", "")
+    df.loc[i, 'name'] = CNname.replace("/", "")
 
 df = df.drop(columns=['url', 'imdb'])
 # <<< the data cleaning process end
